@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мы женимся!</title>
+    <title>Приглашение на свадьбу</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <!-- Подключаем милые рукописные шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;600;700&family=Pangolin&display=swap" rel="stylesheet">
     
     <style>
@@ -34,7 +33,6 @@
             padding: 10px;
         }
 
-        /* Задний фон под текстуру бумаги */
         .page-container {
             background-color: var(--bg-color);
             background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
@@ -49,7 +47,6 @@
             border-radius: 12px;
         }
 
-        /* Экран авторизации */
         #auth-screen {
             text-align: center;
             padding-top: 100px;
@@ -99,13 +96,11 @@
             height: 20px;
         }
 
-        /* Главный контент приглашения */
         #main-content {
             display: none;
             text-align: center;
         }
 
-        /* Декоративные элементы (сердечки, звездочки) */
         .deco-heart {
             position: absolute;
             color: #ff8fa3;
@@ -136,7 +131,6 @@
             margin-bottom: 35px;
         }
 
-        /* Блоки с событиями */
         .event-row {
             display: flex;
             align-items: center;
@@ -146,7 +140,7 @@
 
         .time-badge {
             border: 2px solid var(--green-accent);
-            border-radius: 50% 40% 50% 45%; /* Неровный круг из референса */
+            border-radius: 50% 40% 50% 45%;
             padding: 10px 15px;
             font-size: 1.3rem;
             font-weight: bold;
@@ -162,7 +156,6 @@
             margin-bottom: 4px;
         }
         .event-details h3.pink-label { color: var(--pink-accent); }
-        .event-details h3.blue-label { color: var(--blue-accent); }
         
         .event-details p {
             font-size: 1rem;
@@ -170,7 +163,6 @@
             line-height: 1.4;
         }
 
-        /* Блоки вопросов */
         .section-title {
             font-family: 'Caveat', cursive;
             font-size: 2.2rem;
@@ -185,16 +177,16 @@
             color: #444;
         }
 
-        /* Стили для фото жениха и невесты */
         .photo-container {
             position: relative;
-            width: 150px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             margin: 20px auto;
-            border-radius: 10px;
+            border-radius: 50%;
             background: #ddd;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid white;
         }
 
         .photo-container img {
@@ -207,7 +199,7 @@
             font-family: 'Caveat', cursive;
             font-size: 1.5rem;
             color: var(--pink-accent);
-            margin-top: -5px;
+            margin-top: 5px;
             margin-bottom: 15px;
         }
 
@@ -215,7 +207,6 @@
             margin-top: 40px;
         }
 
-        /* Финальная плашка подтверждения */
         .rsvp-badge {
             border: 2px solid var(--green-accent);
             border-radius: 40px / 20px;
@@ -230,25 +221,24 @@
 <body>
 
     <div class="page-container">
-        <!-- Маленькие декоративные сердечки на фоне -->
         <span class="deco-heart" style="top:2%; left:85%;">❤</span>
         <span class="deco-heart" style="top:25%; left:5%;">❤</span>
         <span class="deco-heart" style="top:75%; left:88%;">❤</span>
 
         <!-- ЭКРАН АВТОРИЗАЦИИ -->
         <div id="auth-screen">
-            <h2>Введите будущую фамилию невесты</h2>
+            <h2>Введите фамилию невесты после свадьбы</h2>
             <input type="text" id="invite-code" placeholder="С большой буквы..." autocomplete="off">
             <br>
             <button onclick="checkCode()">Войти</button>
             <div id="error-msg"></div>
         </div>
 
-        <!-- ОСНОВНОЙ КОНТЕНТ ПРИГЛАШЕНИЯ -->
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
         <div id="main-content">
             <h1 class="main-title"><span>Мы</span> <span>женим</span><span>ся!</span></h1>
             
-            <p class="intro-text">Дорогие и близкие!<br>приглашаем разделить этот особенный день вместе с нами!</p>
+            <p class="intro-text">Дорогие и близкие!<br>Приглашаем разделить этот особенный день вместе с нами!</p>
             
             <div class="main-date">12 августа 2026</div>
 
@@ -263,8 +253,7 @@
 
             <!-- НЕВЕСТА -->
             <div class="photo-container">
-                <!-- Замените "bride.jpg" на имя вашего файла с фото Алсу -->
-                <img src="bride.jpg" alt="Невеста">
+                <img src="Bride.png" alt="Невеста">
             </div>
             <div class="photo-label">невеста ✨</div>
 
@@ -273,27 +262,26 @@
                 <div class="time-badge">17:00</div>
                 <div class="event-details">
                     <h3 class="pink-label">Банкет:</h3>
-                    <p>г. Златоуст,<br>банкет "Белые росы",<br>Береговая Демидовская 1</p>
+                    <p>г. Златоуст,<br>банкет-холл "Белые росы",<br>ул. Береговая Демидовская 1</p>
                 </div>
             </div>
 
             <!-- ДРЕСС-КОД -->
             <div class="section-title">какой дресс-код?</div>
             <p class="section-text">
-                Никаких рамок, только красивые образы. <span style="color:var(--pink-accent)">Белый цвет уже занят</span>, а яркие цвета и шорты - в заслуженном отпуске!
+                Никаких жестких рамок, только красивые образы. <span style="color:var(--pink-accent)">Белый цвет уже занят невестой</span>, а слишком яркие неоновые цвета и спортивные шорты - в заслуженном отпуске!
             </p>
 
             <!-- ЖЕНИХ -->
             <div class="photo-container groom-side">
-                <!-- Замените "groom.jpg" на имя вашего файла с фото Данила -->
-                <img src="groom.jpg" alt="Жених">
+                <img src="Groom.png" alt="Жених">
             </div>
             <div class="photo-label" style="color:var(--blue-accent)">жених ⚡</div>
 
             <!-- ЧТО ДАРИТЬ -->
             <div class="section-title">что дарить?</div>
             <p class="section-text">
-                Самым <span style="color:var(--pink-accent)">ценным подарком</span> для нас станет вклад в бюджет нашей молодой семьи
+                Самым <span style="color:var(--pink-accent)">ценным подарком</span> для нас станет ваш вклад в бюджет нашей молодой семьи.
             </p>
 
             <!-- ПОДТВЕРЖДЕНИЕ -->
@@ -308,6 +296,7 @@
         const CORRECT_HASH = "8f12c98d7db5478051786196236b22b1660d5b12da6f01da0e39eb0bf039a099";
 
         function checkCode() {
+            // Очищаем от случайных пробелов в начале и в конце строки
             const input = document.getElementById('invite-code').value.trim().toUpperCase();
             const errorMsg = document.getElementById('error-msg');
             const inputHash = CryptoJS.SHA256(input).toString();
