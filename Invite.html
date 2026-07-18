@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мы женимся!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Подключаем милые рукописные шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;600;700&family=Pangolin&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f7f5f0;
+            --text-dark: #333333;
+            --pink-accent: #e05275;
+            --blue-accent: #4a779d;
+            --green-accent: #7ca942;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #e5e2da;
+            color: var(--text-dark);
+            font-family: 'Pangolin', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        /* Задний фон под текстуру бумаги */
+        .page-container {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+            max-width: 500px;
+            width: 100%;
+            min-height: 95vh;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        /* Экран авторизации */
+        #auth-screen {
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        #auth-screen h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 2.2rem;
+            color: var(--blue-accent);
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            border: 2px dashed var(--pink-accent);
+            background: #ffffff;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        button {
+            background: var(--pink-accent);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(224, 82, 117, 0.3);
+            font-family: inherit;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        #error-msg {
+            color: var(--pink-accent);
+            margin-top: 15px;
+            font-size: 1rem;
+            height: 20px;
+        }
+
+        /* Главный контент приглашения */
+        #main-content {
+            display: none;
+            text-align: center;
+        }
+
+        /* Декоративные элементы (сердечки, звездочки) */
+        .deco-heart {
+            position: absolute;
+            color: #ff8fa3;
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .main-title {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        .main-title span:nth-child(1) { color: #3a7bd5; }
+        .main-title span:nth-child(2) { color: #76b852; }
+        .main-title span:nth-child(3) { color: #f857a6; }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .main-date {
+            font-family: 'Caveat', cursive;
+            font-size: 2.8rem;
+            color: var(--pink-accent);
+            margin-bottom: 35px;
+        }
+
+        /* Блоки с событиями */
+        .event-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .time-badge {
+            border: 2px solid var(--green-accent);
+            border-radius: 50% 40% 50% 45%; /* Неровный круг из референса */
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #444;
+            min-width: 80px;
+            text-align: center;
+            margin-right: 20px;
+            background: rgba(124, 169, 66, 0.05);
+        }
+
+        .event-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .event-details h3.pink-label { color: var(--pink-accent); }
+        .event-details h3.blue-label { color: var(--blue-accent); }
+        
+        .event-details p {
+            font-size: 1rem;
+            color: #444;
+            line-height: 1.4;
+        }
+
+        /* Блоки вопросов */
+        .section-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.2rem;
+            color: var(--blue-accent);
+            margin: 35px 0 10px 0;
+        }
+
+        .section-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            padding: 0 10px;
+            color: #444;
+        }
+
+        /* Стили для фото жениха и невесты */
+        .photo-container {
+            position: relative;
+            width: 150px;
+            height: 180px;
+            margin: 20px auto;
+            border-radius: 10px;
+            background: #ddd;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-label {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--pink-accent);
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
+        .groom-side {
+            margin-top: 40px;
+        }
+
+        /* Финальная плашка подтверждения */
+        .rsvp-badge {
+            border: 2px solid var(--green-accent);
+            border-radius: 40px / 20px;
+            padding: 15px 20px;
+            font-size: 1.05rem;
+            margin: 40px auto 25px auto;
+            max-width: 90%;
+            background: rgba(124, 169, 66, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <!-- Маленькие декоративные сердечки на фоне -->
+        <span class="deco-heart" style="top:2%; left:85%;">❤</span>
+        <span class="deco-heart" style="top:25%; left:5%;">❤</span>
+        <span class="deco-heart" style="top:75%; left:88%;">❤</span>
+
+        <!-- ЭКРАН АВТОРИЗАЦИИ -->
+        <div id="auth-screen">
+            <h2>Введите будущую фамилию невесты</h2>
+            <input type="text" id="invite-code" placeholder="С большой буквы..." autocomplete="off">
+            <br>
+            <button onclick="checkCode()">Войти</button>
+            <div id="error-msg"></div>
+        </div>
+
+        <!-- ОСНОВНОЙ КОНТЕНТ ПРИГЛАШЕНИЯ -->
+        <div id="main-content">
+            <h1 class="main-title"><span>Мы</span> <span>женим</span><span>ся!</span></h1>
+            
+            <p class="intro-text">Дорогие и близкие!<br>приглашаем разделить этот особенный день вместе с нами!</p>
+            
+            <div class="main-date">12 августа 2026</div>
+
+            <!-- РОСПИСЬ -->
+            <div class="event-row">
+                <div class="time-badge">15:30</div>
+                <div class="event-details">
+                    <h3 class="pink-label">Роспись:</h3>
+                    <p>г. Златоуст,<br>ЗАГС города Златоуст</p>
+                </div>
+            </div>
+
+            <!-- НЕВЕСТА -->
+            <div class="photo-container">
+                <!-- Замените "bride.jpg" на имя вашего файла с фото Алсу -->
+                <img src="bride.jpg" alt="Невеста">
+            </div>
+            <div class="photo-label">невеста ✨</div>
+
+            <!-- БАНКЕТ -->
+            <div class="event-row">
+                <div class="time-badge">17:00</div>
+                <div class="event-details">
+                    <h3 class="pink-label">Банкет:</h3>
+                    <p>г. Златоуст,<br>банкет "Белые росы",<br>Береговая Демидовская 1</p>
+                </div>
+            </div>
+
+            <!-- ДРЕСС-КОД -->
+            <div class="section-title">какой дресс-код?</div>
+            <p class="section-text">
+                Никаких рамок, только красивые образы. <span style="color:var(--pink-accent)">Белый цвет уже занят</span>, а яркие цвета и шорты - в заслуженном отпуске!
+            </p>
+
+            <!-- ЖЕНИХ -->
+            <div class="photo-container groom-side">
+                <!-- Замените "groom.jpg" на имя вашего файла с фото Данила -->
+                <img src="groom.jpg" alt="Жених">
+            </div>
+            <div class="photo-label" style="color:var(--blue-accent)">жених ⚡</div>
+
+            <!-- ЧТО ДАРИТЬ -->
+            <div class="section-title">что дарить?</div>
+            <p class="section-text">
+                Самым <span style="color:var(--pink-accent)">ценным подарком</span> для нас станет вклад в бюджет нашей молодой семьи
+            </p>
+
+            <!-- ПОДТВЕРЖДЕНИЕ -->
+            <div class="rsvp-badge">
+                Просьба подтвердить своё присутствие до 30.07.2026
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Хеш SHA-256 от слова "МИНИАХМЕТОВА"
+        const CORRECT_HASH = "8f12c98d7db5478051786196236b22b1660d5b12da6f01da0e39eb0bf039a099";
+
+        function checkCode() {
+            const input = document.getElementById('invite-code').value.trim().toUpperCase();
+            const errorMsg = document.getElementById('error-msg');
+            const inputHash = CryptoJS.SHA256(input).toString();
+
+            if (inputHash === CORRECT_HASH) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                errorMsg.innerText = "Неверный ответ. Попробуйте еще раз";
+                document.getElementById('invite-code').value = "";
+            }
+        }
+
+        document.getElementById('invite-code').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkCode();
+            }
+        });
+    </script>
+</body>
+</html>
