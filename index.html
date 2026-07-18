@@ -4,312 +4,351 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мы женимся!</title>
-    <!-- Подключаем милые рукописные шрифты -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;600;700&family=Pangolin&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #f7f5f0;
-            --text-dark: #333333;
+            --bg-color: #e5e2da;
+            --card-color: #f7f5f0;
+            --text-dark: #2c2c2c;
             --pink-accent: #e05275;
             --blue-accent: #4a779d;
-            --green-accent: #7ca942;
+            --purple-accent: #b39ddb;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: #e5e2da;
+            background-color: var(--bg-color);
             color: var(--text-dark);
-            font-family: 'Pangolin', cursive;
+            font-family: 'Caveat', cursive; 
+            font-size: 1.3rem; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            padding: 40px 10px;
+            overflow-x: hidden;
         }
 
-        /* Задний фон под текстуру бумаги */
-        .page-container {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
-            background-size: 24px 24px;
-            max-width: 500px;
-            width: 100%;
-            min-height: 95vh;
-            padding: 30px 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        .main-wrapper {
             position: relative;
-            overflow: hidden;
-            border-radius: 12px;
+            max-width: 460px;
+            width: 100%;
+            margin: 0 auto;
         }
 
-        /* Экран авторизации */
-        #auth-screen {
+        .page-container {
+            background-color: var(--card-color);
+            background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 0);
+            background-size: 24px 24px;
+            width: 100%;
+            padding: 50px 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            position: relative;
+            border-radius: 20px;
+        }
+
+        .photo-sticker {
+            display: none;
+            background: transparent;
+            pointer-events: none;
             text-align: center;
-            padding-top: 100px;
+        }
+        .photo-sticker img { width: 100%; height: auto; display: block; margin: 0 auto; }
+        .photo-sticker p { font-family: 'Bad Script', cursive; margin-top: 4px; font-weight: bold; }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 25px;
         }
 
-        #auth-screen h2 {
-            font-family: 'Caveat', cursive;
-            font-size: 2.2rem;
-            color: var(--blue-accent);
-            margin-bottom: 30px;
+        .main-title { 
+            font-family: 'Pacifico', cursive; 
+            font-size: 3.4rem; 
+            line-height: 1.2;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
+            padding-bottom: 10px;
+            font-weight: 500;
         }
+        .main-title span:nth-child(1) { color: var(--purple-accent); }
+        .main-title span:nth-child(2) { color: #76b852; }
+        .main-title span:nth-child(3) { color: #f857a6; }
+        .main-title span:nth-child(4) { color: #f5b041; }
+        .main-title span:nth-child(5) { color: #5dade2; }
+        .main-title span:nth-child(6) { color: #e05275; }
+        .main-title span:nth-child(7) { color: #7ca942; }
+        .main-title span:nth-child(8) { color: #4a779d; }
+        .main-title span:nth-child(9) { color: #eb984e; }
+        .main-title span:nth-child(10) { color: #f857a6; }
+
+        .groom-sticker {
+            width: 115px;
+            transform: rotate(8deg) translateY(-10px);
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        .groom-sticker p { color: var(--blue-accent); font-size: 1.1rem; }
+
+        .intro-text { 
+            font-size: 1.4rem; 
+            line-height: 1.5; 
+            margin-bottom: 30px; 
+            color: #333;
+            font-weight: 500;
+        }
+
+        .date-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .bride-sticker {
+            width: 105px;
+            transform: rotate(-8deg);
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .bride-sticker p { color: var(--pink-accent); font-size: 1.1rem; }
+
+        .main-date { 
+            font-family: 'Bad Script', cursive; 
+            font-size: 3.2rem; 
+            color: var(--pink-accent);
+            line-height: 1.1;
+            font-weight: bold;
+        }
+
+        .event-row { display: flex; align-items: center; margin-bottom: 35px; text-align: left; }
+        
+        .time-badge { 
+            font-family: 'Bad Script', cursive;
+            border: 2px solid var(--purple-accent); 
+            border-radius: 50% 40% 50% 45%; 
+            padding: 8px 12px; 
+            font-size: 1.7rem; 
+            font-weight: bold; 
+            color: #333; 
+            min-width: 85px; 
+            text-align: center; 
+            margin-right: 20px; 
+            background: rgba(179, 157, 219, 0.03);
+        }
+
+        .event-details h3.pink-label { 
+            color: var(--pink-accent); 
+            font-size: 1.5rem; 
+            margin-bottom: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .event-details p { color: #333; line-height: 1.3; font-size: 1.3rem; font-weight: 500; }
+
+        .section-title { 
+            font-family: 'Bad Script', cursive; 
+            font-size: 2.6rem; 
+            color: var(--blue-accent); 
+            margin: 45px 0 15px 0; 
+            font-weight: bold;
+        }
+        
+        .section-desc {
+            padding: 0 10px; 
+            color: #333; 
+            line-height: 1.4; 
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .rsvp-container {
+            border: 2px dashed var(--purple-accent); 
+            border-radius: 16px; 
+            padding: 22px 15px; 
+            margin-top: 50px;
+            background: rgba(179, 157, 219, 0.02);
+        }
+        
+        .rsvp-title {
+            font-family: 'Bad Script', cursive;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .rsvp-subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            line-height: 1.3;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .links-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .vk-link {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .vk-link:active { transform: scale(0.97); }
+
+        .link-groom {
+            background-color: #ebf3f9;
+            color: var(--blue-accent);
+            border: 1px solid rgba(74, 119, 157, 0.2);
+        }
+
+        .link-bride {
+            background-color: #fdf0f3;
+            color: var(--pink-accent);
+            border: 1px solid rgba(224, 82, 117, 0.2);
+        }
+
+        @media (max-width: 380px) {
+            .main-title { font-size: 2.7rem; }
+            .main-date { font-size: 2.4rem; }
+            .groom-sticker { width: 95px; }
+            .bride-sticker { width: 90px; margin-right: 8px; }
+            .time-badge { font-size: 1.5rem; min-width: 75px; margin-right: 12px; }
+            .section-title { font-size: 2.2rem; }
+            .links-row { flex-direction: column; gap: 8px; }
+            .vk-link { width: 100%; text-align: center; }
+        }
+
+        .deco-heart { position: absolute; color: #ff8fa3; font-size: 1.6rem; opacity: 0.5; z-index: 5; }
+
+        #auth-screen { text-align: center; padding: 60px 0; }
+        #auth-screen h2 { font-family: 'Bad Script', cursive; font-size: 2.4rem; color: var(--blue-accent); margin-bottom: 30px; font-weight: bold; }
 
         input[type="text"] {
-            width: 80%;
-            padding: 12px;
-            border: 2px dashed var(--pink-accent);
-            background: #ffffff;
-            border-radius: 20px;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 20px;
-            outline: none;
-            font-family: inherit;
+            width: 90%; padding: 14px; border: 2px dashed var(--pink-accent);
+            background: #ffffff; border-radius: 20px; font-size: 1.3rem;
+            text-align: center; margin-bottom: 25px; outline: none; font-family: inherit;
+            color: var(--text-dark); font-weight: 500;
         }
 
         button {
-            background: var(--pink-accent);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(224, 82, 117, 0.3);
-            font-family: inherit;
-            transition: transform 0.2s;
+            background: var(--pink-accent); color: white; border: none;
+            padding: 14px 45px; font-size: 1.3rem; border-radius: 25px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(224, 82, 117, 0.25);
+            font-family: inherit; font-weight: 600; transition: transform 0.1s ease;
         }
+        button:active { transform: scale(0.98); }
+        #error-msg { color: var(--pink-accent); margin-top: 20px; font-size: 1.1rem; height: 20px; font-weight: 500; }
 
-        button:hover {
-            transform: scale(1.05);
-        }
-
-        #error-msg {
-            color: var(--pink-accent);
-            margin-top: 15px;
-            font-size: 1rem;
-            height: 20px;
-        }
-
-        /* Главный контент приглашения */
-        #main-content {
-            display: none;
-            text-align: center;
-        }
-
-        /* Декоративные элементы (сердечки, звездочки) */
-        .deco-heart {
-            position: absolute;
-            color: #ff8fa3;
-            font-size: 1.5rem;
-            opacity: 0.7;
-        }
-
-        .main-title {
-            font-family: 'Caveat', cursive;
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-        }
-        .main-title span:nth-child(1) { color: #3a7bd5; }
-        .main-title span:nth-child(2) { color: #76b852; }
-        .main-title span:nth-child(3) { color: #f857a6; }
-
-        .intro-text {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            color: #555;
-        }
-
-        .main-date {
-            font-family: 'Caveat', cursive;
-            font-size: 2.8rem;
-            color: var(--pink-accent);
-            margin-bottom: 35px;
-        }
-
-        /* Блоки с событиями */
-        .event-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-
-        .time-badge {
-            border: 2px solid var(--green-accent);
-            border-radius: 50% 40% 50% 45%; /* Неровный круг из референса */
-            padding: 10px 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #444;
-            min-width: 80px;
-            text-align: center;
-            margin-right: 20px;
-            background: rgba(124, 169, 66, 0.05);
-        }
-
-        .event-details h3 {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-        .event-details h3.pink-label { color: var(--pink-accent); }
-        .event-details h3.blue-label { color: var(--blue-accent); }
-        
-        .event-details p {
-            font-size: 1rem;
-            color: #444;
-            line-height: 1.4;
-        }
-
-        /* Блоки вопросов */
-        .section-title {
-            font-family: 'Caveat', cursive;
-            font-size: 2.2rem;
-            color: var(--blue-accent);
-            margin: 35px 0 10px 0;
-        }
-
-        .section-text {
-            font-size: 1rem;
-            line-height: 1.5;
-            padding: 0 10px;
-            color: #444;
-        }
-
-        /* Стили для фото жениха и невесты (оригинальные прямоугольные) */
-        .photo-container {
-            position: relative;
-            width: 150px;
-            height: 180px;
-            margin: 20px auto;
-            border-radius: 10px;
-            background: #ddd;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .photo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .photo-label {
-            font-family: 'Caveat', cursive;
-            font-size: 1.5rem;
-            color: var(--pink-accent);
-            margin-top: -5px;
-            margin-bottom: 15px;
-        }
-
-        .groom-side {
-            margin-top: 40px;
-        }
-
-        /* Финальная плашка подтверждения */
-        .rsvp-badge {
-            border: 2px solid var(--green-accent);
-            border-radius: 40px / 20px;
-            padding: 15px 20px;
-            font-size: 1.05rem;
-            margin: 40px auto 25px auto;
-            max-width: 90%;
-            background: rgba(124, 169, 66, 0.05);
-        }
+        #main-content { display: none; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="page-container">
-        <!-- Маленькие декоративные сердечки на фоне -->
-        <span class="deco-heart" style="top:2%; left:85%;">❤</span>
-        <span class="deco-heart" style="top:25%; left:5%;">❤</span>
-        <span class="deco-heart" style="top:75%; left:88%;">❤</span>
-
-        <!-- ЭКРАН АВТОРИЗАЦИИ -->
-        <div id="auth-screen">
-            <h2>Введите фамилию невесты после свадьбы</h2>
-            <input type="text" id="invite-code" placeholder="С большой буквы..." autocomplete="off">
-            <br>
-            <button onclick="checkCode()">Войти</button>
-            <div id="error-msg"></div>
-        </div>
-
-        <!-- ОСНОВНОЙ КОНТЕНТ ПРИГЛАШЕНИЯ -->
-        <div id="main-content">
-            <h1 class="main-title"><span>Мы</span> <span>женим</span><span>ся!</span></h1>
+    <div class="main-wrapper">
+        <div class="page-container">
             
-            <p class="intro-text">Дорогие и близкие!<br>приглашаем разделить этот особенный день вместе с нами!</p>
-            
-            <div class="main-date">12 августа 2026</div>
+            <span class="deco-heart" style="top:2%; left:88%;">❤</span>
+            <span class="deco-heart" style="top:42%; left:3%;">❤</span>
+            <span class="deco-heart" style="top:88%; left:90%;">❤</span>
 
-            <!-- РОСПИСЬ -->
-            <div class="event-row">
-                <div class="time-badge">15:30</div>
-                <div class="event-details">
-                    <h3 class="pink-label">Роспись:</h3>
-                    <p>г. Златоуст,<br>ЗАГС города Златоуст</p>
+            <div id="auth-screen">
+                <h2>Введите будущую фамилию невесты</h2>
+                <input type="text" id="invite-code" placeholder="Введите фамилию..." autocomplete="off">
+                <br>
+                <button onclick="checkCode()">Войти</button>
+                <div id="error-msg"></div>
+            </div>
+
+            <div id="main-content">
+                
+                <div class="title-container">
+                    <h1 class="main-title">
+                        <span>М</span><span>ы</span> <span>ж</span><span>е</span><span>н</span><span>и</span><span>м</span><span>с</span><span>я</span><span>!</span>
+                    </h1>
+                    <div class="photo-sticker groom-sticker">
+                        <!-- Название с заглавной Groom.png -->
+                        <img src="Groom.png" alt="Жених">
+                        <p>жених ⚡</p>
+                    </div>
                 </div>
-            </div>
-
-            <!-- НЕВЕСТА -->
-            <div class="photo-container">
-                <img src="bride.jpg" alt="Невеста">
-            </div>
-            <div class="photo-label">невеста ✨</div>
-
-            <!-- БАНКЕТ -->
-            <div class="event-row">
-                <div class="time-badge">17:00</div>
-                <div class="event-details">
-                    <h3 class="pink-label">Банкет:</h3>
-                    <p>г. Златоуст,<br>банкет "Белые росы",<br>Береговая Демидовская 1</p>
+                
+                <p class="intro-text">Дорогие и близкие! Приглашаем разделить этот особенный день вместе с нами!</p>
+                
+                <div class="date-section">
+                    <div class="photo-sticker bride-sticker">
+                        <!-- Название с заглавной Bride.png -->
+                        <img src="Bride.png" alt="Невеста">
+                        <p>невеста ✨</p>
+                    </div>
+                    <div class="main-date">12 августа<br>2026</div>
                 </div>
-            </div>
 
-            <!-- ДРЕСС-КОД -->
-            <div class="section-title">какой дресс-код?</div>
-            <p class="section-text">
-                Никаких рамок, только красивые образы. <span style="color:var(--pink-accent)">Белый цвет уже занят</span>, а яркие цвета и шорты — в заслуженном отпуске!
-            </p>
+                <div class="event-row">
+                    <div class="time-badge">15:30</div>
+                    <div class="event-details">
+                        <h3 class="pink-label">Роспись:</h3>
+                        <p>г. Златоуст, пр-кт Им. Ю.А. Гагарина 3-й мкр. д. 2 (отдел ЗАГС Администрации ЗГО)</p>
+                    </div>
+                </div>
 
-            <!-- ЖЕНИХ -->
-            <div class="photo-container groom-side">
-                <img src="groom.jpg" alt="Жених">
-            </div>
-            <div class="photo-label" style="color:var(--blue-accent)">жених ⚡</div>
+                <div class="event-row">
+                    <div class="time-badge">17:00</div>
+                    <div class="event-details">
+                        <h3 class="pink-label">Банкет:</h3>
+                        <p>г. Златоуст, ул. Береговая Демидовская д.1<br>(Банкетный зал «Белые Росы»)</p>
+                    </div>
+                </div>
 
-            <!-- ЧТО ДАРИТЬ -->
-            <div class="section-title">что дарить?</div>
-            <p class="section-text">
-                Самым <span style="color:var(--pink-accent)">ценным подарком</span> для нас станет вклад в бюджет нашей молодой семьи
-            </p>
+                <div class="section-title">какой дресс-код?</div>
+                <p class="section-desc">Никаких рамок, только красивые образы. <span style="color:var(--pink-accent); font-weight:600;">Белый цвет уже занят</span>, а яркие цвета и шорты - в заслуженном отпуске!</p>
 
-            <!-- ПОДТВЕРЖДЕНИЕ -->
-            <div class="rsvp-badge">
-                Просьба подтвердить своё присутствие до 30.07.2026
+                <div class="section-title">что дарить?</div>
+                <p class="section-desc">Самым <span style="color:var(--pink-accent); font-weight:600;">ценным подарком</span> для нас станет вклад в бюджет нашей молодой семьи</p>
+
+                <div class="rsvp-container">
+                    <div class="rsvp-title">Пожалуйста, подтвердите своё присутствие до 30.07.2026</div>
+                    <div class="rsvp-subtitle">Так как ведется подсчет гостей для точного бронирования мест в ресторане, напишите нам:</div>
+                    
+                    <div class="links-row">
+                        <a href="https://vk.ru/yummy_neq" target="_blank" class="vk-link link-groom">Написать жениху</a>
+                        <a href="https://vk.ru/alsuchka009" target="_blank" class="vk-link link-bride">Написать невесте</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        function checkCode() {
-            // Берем введенный текст, чистим от пробелов и переводим в верхний регистр
-            const input = document.getElementById('invite-code').value.trim().toUpperCase();
-            const errorMsg = document.getElementById('error-msg');
+        const CORRECT_HASH = "3696694bf1fca2d3490dde5175caabbad1f48340de7d0c87e4e5262d550a5c7a";
 
-            // Проверка по чистому тексту на русском языке
-            if (input === "МИНИАХМЕТОВА") {
+        function checkCode() {
+            const input = document.getElementById('invite-code').value.trim().toLowerCase();
+            const errorMsg = document.getElementById('error-msg');
+            const inputHash = CryptoJS.SHA256(input).toString();
+
+            if (inputHash === CORRECT_HASH) {
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
+                
+                const stickers = document.querySelectorAll('.photo-sticker');
+                stickers.forEach(sticker => {
+                    sticker.style.display = 'inline-block';
+                });
             } else {
                 errorMsg.innerText = "Неверный ответ. Попробуйте еще раз";
                 document.getElementById('invite-code').value = "";
@@ -317,9 +356,7 @@
         }
 
         document.getElementById('invite-code').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkCode();
-            }
+            if (e.key === 'Enter') checkCode();
         });
     </script>
 </body>
